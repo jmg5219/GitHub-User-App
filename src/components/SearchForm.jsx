@@ -1,7 +1,7 @@
 import React from "react"
 import UserCardList from "./UserCardList"
-import { BrowserRouter as Router, Switch, Route, Link,useRouteMatch } from 'react-router-dom';
-import Post from './Post';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import UserProfile from './UserProfile';
 
 class SearchForm extends React.Component {
     constructor(props) {
@@ -18,6 +18,7 @@ class SearchForm extends React.Component {
         const data = await response.json();
         return data;
     };
+    
     handleChange(event) {
         this.setState({ userName: event.target.value });
     }
@@ -27,11 +28,11 @@ class SearchForm extends React.Component {
         event.preventDefault();
         const userData = await this.loadData();
         console.log(userData)
-        
-        this.setState({ 
+
+        this.setState({
             users: [...this.state.users, userData]
         });
-    
+
 
 
     }
@@ -39,20 +40,31 @@ class SearchForm extends React.Component {
     render() {
         return (
             <>
-            
-                <h1>Search for a GitHub User:</h1>
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Name:
-            <input type="text" value={this.state.userName} onChange={this.handleChange} />
-                    </label>
-                    <input type="submit" value="Submit" />
-                </form> 
-                <UserCardList users={this.state.users} />
 
-                
+                <Router>
+                    <Route path="/" exact>
+
+                        <h1>Search for a GitHub User:</h1>
+                        <form onSubmit={this.handleSubmit}>
+                            <label>
+                                Name:
+            <input type="text" value={this.state.userName} onChange={this.handleChange} />
+                            </label>
+                            <input type="submit" value="Submit" />
+                        </form>
+
+                        <UserCardList users={this.state.users} />
+
+                    </Route>
+                    <Route path="/user/:userName?">
+                        <Link to="/">Home</Link>
+                        <UserProfile users={this.state.users}/>
+                    </Route>                    
                     
-                
+                </Router>
+
+
+
 
             </>
 
